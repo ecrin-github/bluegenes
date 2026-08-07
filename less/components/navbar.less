@@ -331,6 +331,17 @@
                 }
             }
 
+            .floating-label-field label {
+                color: inherit;
+                font-size: 13px;
+                font-weight: 500;
+                // !important is needed because components/ui/inputs.less
+                // (which sets that background on the floated/focused state)
+                // is imported after this file, and both selectors have the
+                // same specificity, so it would otherwise win.
+                background: transparent !important;
+            }
+
             .dropdown-menu {
                 min-width: 40vw;
             }

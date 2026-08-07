@@ -8,9 +8,6 @@
             [clojure.string :as str]
             [bluegenes.utils :refer [ascii-arrows ascii->svg-arrows md-paragraph md-element
                                      get-mine-ns get-mine-url]]
-            [goog.string :as gstring]
-            [cljs-time.format :as time-format]
-            [cljs-time.coerce :as time-coerce]
             [oops.core :refer [oget]]
             [bluegenes.components.bootstrap :refer [poppable]]
             [bluegenes.config :refer [server-vars]]))
@@ -39,7 +36,7 @@
          [search/main]
          [:div.search-info
           [icon "info"]
-          [:span "Genes, proteins, pathways, ontology terms, authors, etc."]]])]]))
+          [:span "Studies, protocols, conditions, publications, interventions, etc."]]])]]))
 
 (defn template-queries []
   (let [categories @(subscribe [:templates-by-popularity/all-categories])
@@ -49,7 +46,7 @@
     [:div.row.section
      [:div.col-xs-12
       [:h2.text-center "Go by Most Popular Queries"]]
-     [:div.col-xs-12.template-preview
+     [:div.col-xs-12.template-preview.section
       [:ul.nav.nav-tabs.template-tabs
        (doall
         (for [category categories]
@@ -68,20 +65,6 @@
                    [[:span title]]))]))]
       [:a.more-queries {:href (route/href ::route/templates)}
        "More queries here"]]]))
-
-(def post-time-formatter (time-format/formatter "MMMM d, Y"))
-
-(defn latest-news []
-  (let [posts (take 3 (or @(subscribe [:home/latest-posts]) nil))]
-    (if (empty? posts)
-      [:p "Latest news from the InterMine community."]
-      (into [:ul.latest-news]
-            (for [{:keys [title link pubDate description]} posts]
-              [:li
-               [:span (time-format/unparse post-time-formatter
-                                           (time-coerce/from-string pubDate))]
-               [:a {:href link :target "_blank"} title]
-               [:p (-> description gstring/unescapeEntities str/trim (subs 0 100))]])))))
 
 (defn convert-custom-cta
   "Convert the custom CTA format used in web.properties to the one used for rendering."
@@ -121,28 +104,24 @@
    {:label "Submit feedback"
     :props {:on-click #(dispatch [:home/scroll-to-feedback])
             :role "button"}
-    :body [:p [:strong "Contact us"] " with problems, comments, suggestions and any other queries."]}
-   {:label "What's new"
-    :props {:href (or @(subscribe [:current-mine/news]) "https://intermineorg.wordpress.com/")
-            :target "_blank"}
-    :body [latest-news]}
-   {:label "Cite us"
-    :props {:href @(subscribe [:current-mine/citation])
-            :target "_blank"}
-    :body [:p "Please help us to maintain funding: if we have helped your research please remember to cite us in your publications."]}])
+    :body [:p [:strong "Contact us"] " with problems, comments, suggestions and any other queries."]}])
 
 (defn call-to-action []
   (let [custom-cta @(subscribe [:home/custom-cta])
         cta (if (seq custom-cta)
               (map convert-custom-cta custom-cta)
-              (default-cta))]
-    (into [:div.row.section.grid] ;; Without grid class the 3rd row won't be on the same row.
+              (default-cta))
+        mine-name @(subscribe [:current-mine-human-name])]
+    [:<>
+     [:div.row.section
+      [:div.col-xs-12 [:h2.text-center (str "Explore " mine-name)]]]
+     (into [:div.row.section.grid] ;; Without grid class the 3rd row won't be on the same row.
            ;; This isn't official bootstrap, so I can only imagine Gridlex is messing with things.
-          (for [[index {:keys [label props body]}] (map-indexed vector cta)]
-            [:div.col-xs-12.col-sm-5.cta-block
-             {:class (when (odd? index) :col-sm-offset-2)}
-             [:a.btn.btn-home props label]
-             body]))))
+           (for [[index {:keys [label props body]}] (map-indexed vector cta)]
+             [:div.col-xs-12.col-sm-5.cta-block
+              {:class (when (odd? index) :col-sm-offset-2)}
+              [:a.btn.btn-home props label]
+              body]))]))
 
 (defn mine-selector-filter []
   (let [all-neighbourhoods @(subscribe [:home/all-registry-mine-neighbourhoods])
@@ -257,17 +236,25 @@
                      [icon "checkmark"]
                      [:h3 "Thank you!"]
                      [:p "Your feedback has been submitted."]]
-           [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2.feedback
-            [:input.form-control
-             {:type "email"
-              :placeholder "Your email (optional)"
-              :value @email*
-              :on-change #(reset! email* (oget % :target :value))}]
-            [:textarea#feedbackform.form-control
-             {:placeholder "Your feedback here"
-              :rows 5
-              :value @text*
-              :on-change #(reset! text* (oget % :target :value))}]
+           [:div.col-xs-12.feedback.section
+            [:div.floating-label-field
+             [:input.form-control
+              {:type "email"
+               :id "feedback-email"
+               ;; A non-empty placeholder is required for the
+               ;; `:placeholder-shown` CSS pseudo-class (used to float the
+               ;; label above) to work.
+               :placeholder " "
+               :value @email*
+               :on-change #(reset! email* (oget % :target :value))}]
+             [:label {:for "feedback-email"} "Your email (optional)"]]
+            [:div.floating-label-field
+             [:textarea#feedbackform.form-control
+              {:placeholder " "
+               :rows 5
+               :value @text*
+               :on-change #(reset! text* (oget % :target :value))}]
+             [:label {:for "feedbackform"} "Your feedback here"]]
             [:button.btn.btn-block
              {:on-click #(dispatch [:home/submit-feedback @email* @text*])}
              "Submit"]
@@ -327,7 +314,7 @@
      (when (empty? entries)
        [:div.col-xs-12.text-center
         [credits-fallback]])
-     [:div.col-xs-10.col-xs-offset-1
+     [:div.col-xs-10.col-xs-offset-1.section
       (into [:div.row.row-center-cols.row-space-cols]
             (for [entry all-entries]
               [credits-entry entry]))]]))

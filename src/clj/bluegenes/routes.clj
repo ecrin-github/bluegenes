@@ -7,7 +7,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [bluegenes.ws.auth :as auth]
             [bluegenes.ws.ids :as ids]
-            [bluegenes.ws.rss :as rss]
+            [bluegenes.ws.feedback :as feedback]
             [bluegenes.ws.lookup :as lookup]
             [bluegenes.index :refer [index]]
             [config.core :refer [env]]
@@ -76,7 +76,7 @@
       (context "/api" []
         (context "/auth" [] auth/routes)
         (context "/ids" [] ids/routes)
-        (context "/rss" [] rss/routes))
+        (context "/feedback" [] feedback/routes))
 
       ;; Linking in.
       ;; Handles both configured mines and the /query path.

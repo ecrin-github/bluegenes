@@ -64,6 +64,6 @@
                     :children [icon "discord" 2]}]])]
      [:div.section.column
       [link @(subscribe [:current-mine/citation])
-       (str "CITE " (some-> @(subscribe [:current-mine-human-name]) str/upper-case))]
+       "CITE INTERMINE"]
       [link @(subscribe [:current-mine/url :aboutUs]) "ABOUT US"]
       [link @(subscribe [:current-mine/url :privacyPolicy]) "PRIVACY POLICY"]]]))
