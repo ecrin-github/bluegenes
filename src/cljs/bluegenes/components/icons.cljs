@@ -119,6 +119,12 @@
       {:d
        "M9 12.5H7.79289L8.64645 13.3536L15.3131 20.0202L15.6667 20.3738L16.0202 20.0202L22.6869 13.3536L23.5404 12.5H22.3333H9Z"}]]
 
+    [:symbol#icon-menu
+     {:viewBox "0 0 32 32"}
+     [:rect {:x 2 :y 6 :width 28 :height 4}]
+     [:rect {:x 2 :y 14 :width 28 :height 4}]
+     [:rect {:x 2 :y 22 :width 28 :height 4}]]
+
     [:symbol#icon-bar-chart
      {:viewBox "0 0 32 28"}
      [:title "bar-chart"]

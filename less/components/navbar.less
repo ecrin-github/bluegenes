@@ -1,6 +1,10 @@
     @import "../variables";
+    // Below this width, the nav links collapse behind a hamburger toggle
+    // instead of being shown inline (matches Bootstrap's md/lg boundary).
+    @nav-collapse-width: 991px;
     //most of these styles apply to all navs, but there's a class down the bottom for just the main (top) navbar.
     nav {
+        position: relative;
         margin-left: -15px;
         margin-right: -15px;
         color: @navbar-color-text;
@@ -17,6 +21,9 @@
             justify-content: flex-start;
             margin-bottom: 0;
             height: 100%;
+            // So .nav-links (a grandchild of nav) can inherit nav's actual
+            // (dynamic, per-mine) background-color through this element.
+            background-color: inherit;
         }
         .active-nav-link { // for use as mixin
             text-decoration: none;
@@ -62,6 +69,60 @@
             flex-grow: 1;
             display: flex;
             overflow: auto;
+        }
+        // Hidden by default (desktop, where .nav-links is shown inline above);
+        // switched on below @nav-collapse-width, alongside collapsing .nav-links
+        // itself into a toggleable dropdown panel.
+        .nav-toggle {
+            display: none;
+        }
+        @media (max-width: @nav-collapse-width) {
+            .nav-toggle {
+                display: flex;
+                flex-grow: 0;
+            }
+            .nav-toggle-button {
+                background: none;
+                border: none;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                color: inherit;
+                fill: inherit;
+                cursor: pointer;
+
+                .icon {
+                    width: @spacer*1.5;
+                    height: @spacer*1.5;
+                }
+            }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background-color: inherit;
+                overflow: visible;
+                z-index: 1000;
+
+                &.open {
+                    display: flex;
+                }
+
+                li {
+                    flex-grow: 0;
+                    width: 100%;
+                }
+            }
+            // Without this, .search's flex-grow: 1 (plus its own input
+            // also being flex-grow: 1) lets it swallow almost all the
+            // available width, squeezing out the login button next to it.
+            .search {
+                flex-grow: 0;
+                flex-basis: 45%;
+            }
         }
         .queries-button {
             display: flex;
@@ -180,6 +241,9 @@
                 width: @spacer*2;
                 max-height: @spacer*2;
                 margin-right: @spacer/2;
+                // Never let the logo shrink away when the navbar is tight
+                // on space (see the narrow-screen media query below).
+                flex-shrink: 0;
             }
             & > a {
                 font-size: 22px;
@@ -386,15 +450,29 @@
             }
             .minename {
                 .transitions;
-                @cp: inset(4px 0px round 3px);
-                clip-path: @cp;
-                -webkit-clip-path: @cp;
-                min-width: 1.3*@spacer;
-                text-overflow: clip;
-                font-family: "Courier New", monospace;
-                overflow: hidden;
                 padding-left: 0.4em;
                 padding-right: 0.4em;
+
+                // Stack the mine name above the logo instead of hiding it -
+                // side-by-side at 22px doesn't fit here, but there's enough
+                // height in the 70px nav for two compact lines.
+                & > a {
+                    flex-direction: column;
+                    justify-content: center;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                }
+                .mine-name {
+                    order: -1;
+                    font-size: 11px;
+                    line-height: 1.1;
+                    white-space: nowrap;
+                }
+                .active-mine-image {
+                    width: @spacer*1.3;
+                    max-height: @spacer*1.3;
+                    margin-right: 0;
+                }
             }
         }
     }
