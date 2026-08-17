@@ -302,8 +302,10 @@
 (reg-event-db
  ::show-permanent-url
  (fn [db [_ url]]
-   (assoc-in db [:report :share] {:status :success
-                                  :url url})))
+   (let [lookup (last (string/split url #"/"))
+         share-url (str (.-origin js/window) (route/href ::route/share {:lookup lookup}))]
+     (assoc-in db [:report :share] {:status :success
+                                    :url share-url}))))
 
 (reg-event-db
  ::show-permanent-url-error

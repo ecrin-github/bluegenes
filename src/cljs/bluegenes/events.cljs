@@ -338,8 +338,11 @@
 (reg-event-fx
  :handle-permanent-url
  (fn [{db :db} [_ mine lookup-string]]
-   (let [[object-type identifier] (split lookup-string #":")
-         object-type (str/capitalize object-type)
+   (let [[type-str identifier] (split (js/decodeURIComponent lookup-string) #":")
+         classes (get-in db [:mines (keyword mine) :service :model :classes])
+         object-type (or (some #(when (= (str/lower-case (name %)) (str/lower-case type-str)) (name %))
+                                (keys classes))
+                          (str/capitalize type-str))
          service (get-in db [:mines (keyword mine) :service])
          q {:from object-type
             :select [(str object-type ".id")]
