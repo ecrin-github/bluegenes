@@ -287,8 +287,12 @@
     :image (str (:bluegenes-deploy-path @server-vars) "/images/intermine-logo.png")
     :url "http://intermine.org/"}
    {:text "The [BlueGenes](https://github.com/intermine/bluegenes) frontend for InterMine has been developed through the support of the [Wellcome Trust](https://wellcome.ac.uk/)."
+    ;; A fixed width (unlike the InterMine logo above, an <img> that shrinks
+    ;; via .img-responsive) doesn't fit the narrow .col-xs-4 this sits in on
+    ;; phone screens, and overflows onto the text next to it. max-width caps
+    ;; it on desktop while width:100% still lets it shrink on mobile.
     :image [icon-comp "bluegenes-logo-text"
-            :style {:width 240 :height "auto"}]
+            :style {:width "100%" :max-width 240 :height "auto"}]
     :url "http://intermine.org/"}])
 
 (defn credits-fallback []
