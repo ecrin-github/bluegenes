@@ -292,7 +292,7 @@
     ;; phone screens, and overflows onto the text next to it. max-width caps
     ;; it on desktop while width:100% still lets it shrink on mobile.
     :image [icon-comp "bluegenes-logo-text"
-            :style {:width "100%" :max-width 240 :height "auto"}]
+            :style {:width "100%" :max-width 240 :height "auto" :aspect-ratio "295/30.307"}]
     :url "http://intermine.org/"}])
 
 (defn credits-fallback []
@@ -312,13 +312,13 @@
   (let [mine-name @(subscribe [:current-mine-human-name])
         entries @(subscribe [:current-mine/credits])
         all-entries (concat entries credits-intermine)]
-    [:div.row.section
+    [:div.row.section.credit
      [:div.col-xs-12
       [:h2.text-center (str mine-name " is made possible by")]]
      (when (empty? entries)
        [:div.col-xs-12.text-center
         [credits-fallback]])
-     [:div.col-xs-10.col-xs-offset-1.section
+     [:div.col-xs-10.col-xs-offset-1
       (into [:div.row.row-center-cols.row-space-cols]
             (for [entry all-entries]
               [credits-entry entry]))]]))
