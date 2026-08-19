@@ -61,6 +61,7 @@
 
         & > [class*='col-'] {
             margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         h1, h2, h3, .h1, .h2, .h3 {
@@ -110,6 +111,7 @@
         }
 
         .mine-description {
+            font-size: 2.5rem;
             text-align: center;
             margin-bottom: @spacer*2;
         }
@@ -376,6 +378,10 @@
     }
 
     .feedback {
+        max-width: 800px;
+        margin: @spacer*8 auto 0;
+        float: none;
+        clear: both;
         input, textarea {
             font-size: 1em;
             border-radius: 0;
@@ -419,5 +425,12 @@
     .credits-fallback {
         font-size: 1.5em;
         font-weight: 300;
+    }
+    .row.section.credit
+    {
+        margin-top: 5em;
+    }
+    .col-xs-offset-1 {
+    margin-top: 3em;
     }
 }

@@ -288,7 +288,7 @@
     :url "http://intermine.org/"}
    {:text "The [BlueGenes](https://github.com/intermine/bluegenes) frontend for InterMine has been developed through the support of the [Wellcome Trust](https://wellcome.ac.uk/)."
     :image [icon-comp "bluegenes-logo-text"
-            :style {:width 240 :height "auto"}]
+            :style {:width 240 :height "24.7"}]
     :url "http://intermine.org/"}])
 
 (defn credits-fallback []
@@ -308,13 +308,13 @@
   (let [mine-name @(subscribe [:current-mine-human-name])
         entries @(subscribe [:current-mine/credits])
         all-entries (concat entries credits-intermine)]
-    [:div.row.section
+    [:div.row.section.credit
      [:div.col-xs-12
       [:h2.text-center (str mine-name " is made possible by")]]
      (when (empty? entries)
        [:div.col-xs-12.text-center
         [credits-fallback]])
-     [:div.col-xs-10.col-xs-offset-1.section
+     [:div.col-xs-10.col-xs-offset-1
       (into [:div.row.row-center-cols.row-space-cols]
             (for [entry all-entries]
               [credits-entry entry]))]]))
