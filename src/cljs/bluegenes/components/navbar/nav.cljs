@@ -247,8 +247,8 @@
     [:li.minename.mine-settings.dropdown.primary-nav
      [:a.dropdown-toggle {:data-toggle "dropdown" :role "button"}
       [active-mine-logo current-mine]
-      [:span.hidden-xs (:name current-mine)]
-      [:svg.icon.icon-caret-down [:use {:xlinkHref "#icon-caret-down"}]]]
+      [:span.mine-name (:name current-mine)]
+      [:svg.icon.icon-caret-down.hidden-xs [:use {:xlinkHref "#icon-caret-down"}]]]
      (into [:ul.dropdown-menu.mine-picker]
            (concat (map-mines configured-mines)
                    (when (seq registry)
@@ -262,31 +262,31 @@
 
 (def queries-to-show 5)
 
-(defn nav-buttons [classes & {:keys [large-screen?]}]
+(defn nav-buttons [classes]
   [:<>
-   [:li.primary-nav.hidden-xs
-    {:class (classes :home-panel large-screen?)}
+   [:li.primary-nav
+    {:class (classes :home-panel)}
     [:a {:href (route/href ::route/home)}
      "Home"]]
    [:li.primary-nav
-    {:class (classes :upload-panel large-screen?)}
+    {:class (classes :upload-panel)}
     [:a {:href (route/href ::route/upload-step {:step "input"})}
      "Upload"]]
    [:li.primary-nav
-    {:class (classes :lists-panel large-screen?)}
+    {:class (classes :lists-panel)}
     [:a {:href (route/href ::route/lists)}
      "Lists"]]
    [:li.primary-nav
-    {:class (classes :templates-panel large-screen?)}
+    {:class (classes :templates-panel)}
     [:a {:href (route/href ::route/templates)}
      "Templates"]]
    [:li.primary-nav
-    {:class (classes :querybuilder-panel large-screen?)}
+    {:class (classes :querybuilder-panel)}
     [:a {:href (route/href ::route/querybuilder)}
      "Query\u00A0Builder"]]
    (when @(subscribe [:results/have-been-queries?])
-     [:li.queries-container.hidden-xs.hidden-sm
-      {:class (classes :results-panel large-screen?)}
+     [:li.queries-container
+      {:class (classes :results-panel)}
       [:a.dropdown-toggle.queries-button
        {:data-toggle "dropdown" :role "button"}
        ;; This has the same height as the *visible* icon, so it ensures the icon
@@ -307,32 +307,36 @@
                   [:div.list-group-item-text
                    (time/format-query query)
                    (when intent
-                     (str " - " (-> intent name str/capitalize)))]]])))])
-   [:li.primary-nav.hidden-md.hidden-lg
-    {:class (classes :search-panel large-screen?)}
-    [:a {:href (route/href ::route/search)}
-     "Search"]]])
+                     (str " - " (-> intent name str/capitalize)))]]])))])])
 
 (defn main []
   (let [active-panel (subscribe [:active-panel])
         main-color (subscribe [:branding/header-main])
         text-color (subscribe [:branding/header-text])
-        classes (fn [panel-key large-screen?]
-                  [(when (= @active-panel panel-key) "active")
-                   (when large-screen? "hidden-xs")])]
+        classes (fn [panel-key]
+                  (when (= @active-panel panel-key) "active"))]
     (fn []
-      [:nav#bluegenes-main-nav.main-nav
-       {:style {:background-color @main-color
-                :color @text-color
-                :fill @text-color}}
-       [:ul
-        [mine-picker]
-        ;; We want to show the nav buttons inside a container on small screens,
-        ;; so it can be scrolled. But we don't want the nav buttons inside the
-        ;; container on larger screens, so they can be placed more spaciously.
-        ;; This is how we achieve this!
-        [nav-buttons classes :large-screen? true]
-        [:div.nav-links.hidden-sm.hidden-md.hidden-lg
-         [nav-buttons classes]]
-        [:li.primary-nav.search.hidden-xs.hidden-sm [search/main]]
-        [user]]])))
+      (let [menu-open? @(subscribe [:nav/mobile-menu-open?])]
+        [:nav#bluegenes-main-nav.main-nav
+         {:style {:background-color @main-color
+                  :color @text-color
+                  :fill @text-color}}
+         [:ul
+          [mine-picker]
+          ;; Below the breakpoint where the full nav no longer fits (see
+          ;; navbar.less), this button toggles .nav-links open/closed.
+          ;; Hidden outright above that breakpoint, where .nav-links is
+          ;; always shown inline instead.
+          [:li.primary-nav.nav-toggle
+           [:button.nav-toggle-button
+            {:type "button"
+             :aria-expanded (if menu-open? "true" "false")
+             :aria-controls "bluegenes-nav-links"
+             :aria-label (if menu-open? "Close navigation menu" "Open navigation menu")
+             :on-click #(dispatch [:nav/toggle-mobile-menu])}
+            [icon "menu"]]]
+          [:div#bluegenes-nav-links.nav-links
+           {:class (when menu-open? "open")}
+           [nav-buttons classes]]
+          [:li.primary-nav.search [search/main]]
+          [user]]]))))

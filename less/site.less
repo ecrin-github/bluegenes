@@ -35,6 +35,11 @@
 @import "components/icons";
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700,300);
 
+
+*, *::before, *::after {
+  min-width: 0;
+}
+
 body {
   background: @body-background-color;
   color: @body-foreground-color;
@@ -52,8 +57,17 @@ html {
   height: 100%;
 }
 
+body,
+html {
+  // Belt-and-braces: stop any single element that refuses to shrink/wrap
+  // (a common flexbox gotcha) from ever forcing horizontal scroll on the
+  // whole page.
+  overflow-x: hidden;
+}
+
 .approot {
   min-height: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -65,10 +79,6 @@ html {
 html {
   //this margin directly offsets the annoying scrollbars
   margin-top: -@annoyingscrollbars;
-  @media (max-width: @even-tinier-screen) {
-    //fix for the html body randomly not choosing to fill the screen on small phone browsers.
-    position: absolute;
-  }
 }
 
 main {
