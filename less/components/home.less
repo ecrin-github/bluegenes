@@ -12,7 +12,10 @@
     @thin-border: 1px solid @body-foreground-color;
     @thick-border: 2px solid @body-foreground-color;
 
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
         font-weight: bold;
     }
 
@@ -75,12 +78,17 @@
         margin-top: @spacer*4;
         margin-bottom: 0;
 
-        & > [class*='col-'] {
+        &>[class*='col-'] {
             margin-bottom: 0;
             padding-bottom: 0;
         }
 
-        h1, h2, h3, .h1, .h2, .h3 {
+        h1,
+        h2,
+        h3,
+        .h1,
+        .h2,
+        .h3 {
             color: @branding-color-secondary;
             margin-top: 20px;
             margin-bottom: 0;
@@ -138,7 +146,11 @@
     }
 
     .search {
-        h1, h2, h3, h4 {
+
+        h1,
+        h2,
+        h3,
+        h4 {
             font-weight: unset;
         }
 
@@ -199,7 +211,7 @@
                 height: 100%;
             }
 
-            li > a {
+            li>a {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -218,7 +230,7 @@
                 }
             }
 
-            li.active > a {
+            li.active>a {
                 opacity: 1;
                 border: none;
                 border-bottom: 4px solid;
@@ -240,7 +252,7 @@
                     background-color: @constrast-gray;
                 }
 
-                & > a {
+                &>a {
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -249,9 +261,9 @@
                         font-weight: 400;
                     }
 
-                    & > * {
+                    &>* {
                         // flex-grow: 1;
-                        flex-basis: 0;
+                        // flex-basis: 0;
                         // max-width: 10em;
                         // Without this, a long template title can't shrink
                         // below its own unwrapped width (default flex-item
@@ -410,7 +422,8 @@
                     }
                 }
 
-                a, button {
+                a,
+                button {
                     height: @mine-entry-height;
                     font-size: 1.1em;
                     font-weight: bold;
@@ -425,7 +438,9 @@
         margin: @spacer*8 auto 0;
         float: none;
         clear: both;
-        input, textarea {
+
+        input,
+        textarea {
             font-size: 1em;
             border-radius: 0;
             border-top: @thick-border;
@@ -450,7 +465,7 @@
             &:active,
             &:focus,
             &:hover {
-                background: lighten(@body-foreground-color,13%);
+                background: lighten(@body-foreground-color, 13%);
             }
         }
 
@@ -469,11 +484,12 @@
         font-size: 1.5em;
         font-weight: 300;
     }
-    .row.section.credit
-    {
+
+    .row.section.credit {
         margin-top: 5em;
     }
+
     .col-xs-offset-1 {
-    margin-top: 3em;
+        margin-top: 3em;
     }
 }
