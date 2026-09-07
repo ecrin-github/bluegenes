@@ -52,16 +52,18 @@ body {
 }
 
 #app,
-body,
 html {
   height: 100%;
 }
 
-body,
-html {
+body {
   // Belt-and-braces: stop any single element that refuses to shrink/wrap
   // (a common flexbox gotcha) from ever forcing horizontal scroll on the
   // whole page.
+  //
+  // This must not also be set on html: overflow-x on the root element is
+  // a known Chromium/Blink bug trigger that breaks position:sticky for
+  // every descendant on the page, regardless of any other CSS.
   overflow-x: hidden;
 }
 
