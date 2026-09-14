@@ -83,10 +83,10 @@
 ;; the namespace is required, which depends on a subscription which might not
 ;; be registered in time, causing a crash.
 (defn default-cta []
-  [{:label "Analyse data"
-    :props {:href (route/href ::route/upload)}
-    :body [:p [:strong "Upload"] " your own sets of genes, proteins, transcripts or other data type to analyse against the integrated data."]}
-   {:label "Browse sources"
+  ;; [{:label "Analyse data"
+  ;;   :props {:href (route/href ::route/upload)}
+  ;;   :body [:p [:strong "Upload"] " your own sets of genes, proteins, transcripts or other data type to analyse against the integrated data."]}
+   [{:label "Browse sources"
     :props {:on-click #(dispatch [:home/query-data-sources])
             :role "button"}
     :body [:p "Browse the full set of data available including versions, publications and links to the " [:strong "original data"] "."]}

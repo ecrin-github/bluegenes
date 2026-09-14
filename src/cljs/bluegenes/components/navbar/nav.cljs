@@ -268,10 +268,10 @@
     {:class (classes :home-panel)}
     [:a {:href (route/href ::route/home)}
      "Home"]]
-   [:li.primary-nav
-    {:class (classes :upload-panel)}
-    [:a {:href (route/href ::route/upload-step {:step "input"})}
-     "Upload"]]
+  ;;  [:li.primary-nav
+  ;;   {:class (classes :upload-panel)}
+  ;;   [:a {:href (route/href ::route/upload-step {:step "input"})}
+  ;;    "Upload"]]
    [:li.primary-nav
     {:class (classes :lists-panel)}
     [:a {:href (route/href ::route/lists)}
